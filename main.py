@@ -22,22 +22,43 @@ __date__ = "10.6.2021"
 __status__ = "Development"
 
 def main():
-    print('This is main.')
-    mean_annual_temp, max_summer_temp, min_winter_temp, depth, delta_depth, temp_over_depth = inputs()
-    calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, delta_depth, temp_over_depth)
+    
+    mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth, temp_over_depth = inputs()
+    depth = 0
+    day = 1
+    change_in_day = []
+    change_in_depth = []
+
+    while depth <= 50:
+        
+        while day <= 5:
+            change_in_day.clear
+            print("day:", day)
+            print("depth:", depth)
+            temp = round(calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day), 2)
+            day += 1
+            change_in_day.append(temp)
+            """
+            if  0 >= change_in_day[day - 1] <= -15:
+                math.fabs()
+            """
+        change_in_depth.append(change_in_day)
+        day = 1
+        depth = depth + delta_depth
+
+    print(change_in_depth)
 
 def inputs():
 
     mean_annual_temp = float(input('Enter mean annual temperature(MAT): '))
     max_summer_temp = float(input('Enter maximum summer temperature(sT): '))
     min_winter_temp = float(input('Enter minumum winter temperature(wT): '))
-    depth = float(input('Enter depth(z): '))
     delta_depth = float(input('Enter change in depth(delta z): '))
     temp_over_depth = float(input('Enter change in temperature over change in depth(dT/dz): '))
 
-    return mean_annual_temp, max_summer_temp, min_winter_temp, depth, delta_depth, temp_over_depth
+    return mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth, temp_over_depth
 
-def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, delta_depth, temp_over_depth):
+def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day):
     print('Calculating...')
     alpha = 1296
     pi = math.pi
@@ -46,10 +67,14 @@ def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, delt
     Ta = (max_summer_temp - min_winter_temp)/2
 
     # frost cracking equation
-    frost_cracking_intensity =  mean_annual_temp+((Ta*math.exp(-0 * (pi/(alpha*year_period))**0.5) ))* math.sin(((2*pi*1)/year_period) - 0 * ((pi/(alpha*year_period))**0.5))
-    print('Frost cracking intensity =', str(frost_cracking_intensity))
+    temp =  mean_annual_temp+((Ta*math.exp(-depth * (pi/(alpha*year_period))**0.5) ))* math.sin(((2*pi*day)/year_period) - depth * ((pi/(alpha*year_period))**0.5))
+    print('T(z,t) =', str(temp))
 
- 
+    return temp
+
+def check_temp(temps):
+    print("check temps")
+
 def output():
     print('Output: ')
 
