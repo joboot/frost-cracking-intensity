@@ -15,9 +15,7 @@ depth to 0 FCI
 """
 
 import math
-from collections import deque
 import numpy as np
-from numpy import array
 import pandas as pd
 import matplotlib.pyplot as plt
 
