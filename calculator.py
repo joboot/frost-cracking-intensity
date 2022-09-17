@@ -18,6 +18,10 @@ import math
 import numpy as np
 import pandas as pd
 
+import GUI
+import readWrite
+import graph
+
 __author__ = "Jordan Booth"
 __version__ = "1.0"
 __date__ = "10.6.2021"
@@ -25,7 +29,7 @@ __status__ = "Development"
 
 
 def main():
-    # mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth, temp_over_depth = inputs()
+    # mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth = inputs()
 
     # For testing purposes
     mean_annual_temp = 0.1
@@ -44,6 +48,12 @@ def main():
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
+    # print(ta_dataframe.head)
+
+    GUI.calculate_fci()
+    # graph.plot_data(fci_dataframe)
+    # readWrite.main()
+
 
 def inputs():
     # Mean annual temperature
@@ -55,9 +65,7 @@ def inputs():
     # The intervals in which depth changes
     delta_depth = float(input('Enter change in depth(delta z): '))
 
-    temp_over_depth = float(input('Enter change in temperature over change in depth(dT/dz): '))
-
-    return mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth, temp_over_depth
+    return mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth
 
 
 def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day):
@@ -159,7 +167,6 @@ def loop(max_depth, delta_depth, mean_annual_temp, max_summer_temp, min_winter_t
         # Loop to get the calculations in a year at this depth interval
         while day <= 365:
             # Calculate T(z,t) Temperature as a function of depth in bedrock and time
-            # temp = calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day)
             temp = calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day)
 
             # Add new calculation to the list of data
