@@ -53,7 +53,7 @@ def calculate(entries):
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
-    return total_fci, fci_dataframe
+    return round(total_fci), fci_dataframe
 
 
 def inputs():
