@@ -18,9 +18,6 @@ import math
 import numpy as np
 import pandas as pd
 
-import GUI
-import readWrite
-import graph
 
 __author__ = "Jordan Booth"
 __version__ = "1.0"
@@ -29,17 +26,25 @@ __status__ = "Development"
 
 
 def main():
+    print('main')
+
+
+def calculate(entries):
     # mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth = inputs()
 
     # For testing purposes
-    mean_annual_temp = 0.1
-    max_summer_temp = 10.9
-    min_winter_temp = -10.9
-    max_depth = 2000
-    delta_depth = 10
+    # mean_annual_temp = 0.1
+    # max_summer_temp = 10.9
+    # min_winter_temp = -10.9
+    # max_depth = 2000
+    # delta_depth = 10
 
+    if None in entries:
+        return None
+
+    mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth = entries
     # Main loop to get the data required
-    data_list, depths, days = loop(max_depth, delta_depth, mean_annual_temp, max_summer_temp, min_winter_temp)
+    data_list, depths, days = loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth)
 
     # Create dataframes out of the data
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
@@ -48,11 +53,7 @@ def main():
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
-    # print(ta_dataframe.head)
-
-    GUI.calculate_fci()
-    # graph.plot_data(fci_dataframe)
-    # readWrite.main()
+    return total_fci, fci_dataframe
 
 
 def inputs():
@@ -141,8 +142,7 @@ def display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci):
     print("Total FCI:", round(total_fci))
 
 
-def loop(max_depth, delta_depth, mean_annual_temp, max_summer_temp, min_winter_temp):
-
+def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth):
     depth = 0
     day = 1
 
@@ -152,7 +152,7 @@ def loop(max_depth, delta_depth, mean_annual_temp, max_summer_temp, min_winter_t
     # List to hold the depths for the indices
     depths = []
     # Creates a range between 0-max_depth (Maximum depth) with intervals of delta_depth (Change in depth)
-    for i in range(0, max_depth + 1, delta_depth):
+    for i in range(0, int(max_depth + 1.0), int(delta_depth)):
         depths.append(i)
 
     # List to hold the numbered days of the year for the columns
