@@ -26,18 +26,32 @@ __status__ = "Development"
 
 
 def main():
-    print('main')
+    print('calculator.py main')
+    # For testing purposes
+    mean_annual_temp = 0.1
+    max_summer_temp = 10.9
+    min_winter_temp = -10.9
+    max_depth = 2000
+    delta_depth = 10
+    thermal_diffusivity = 1296
+    window_max = 0
+    window_min = -15
+
+    # Main loop to get the data required
+    full_data_list, data_list, depths, days = loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth,
+                                                   delta_depth, thermal_diffusivity)
+
+    # Create dataframes out of the data
+    ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
+        create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
+
+    # Displays dataframes and total FCI
+    display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
+
+    print(fci_dataframe[fci_dataframe == 0].first_valid_index())
 
 
 def calculate(entries):
-    # mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth = inputs()
-
-    # For testing purposes
-    # mean_annual_temp = 0.1
-    # max_summer_temp = 10.9
-    # min_winter_temp = -10.9
-    # max_depth = 2000
-    # delta_depth = 10
 
     if None in entries:
         return None
@@ -54,23 +68,12 @@ def calculate(entries):
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
         create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
 
+    depth_to_0 = fci_dataframe[fci_dataframe == 0].first_valid_index()
+
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
-    return round(total_fci), fci_dataframe
-
-
-def inputs():
-    # Mean annual temperature
-    mean_annual_temp = float(input('Enter mean annual temperature(MAT): '))
-    # Maximum summer temperature
-    max_summer_temp = float(input('Enter maximum summer temperature(sT): '))
-    # Minimum winter temperature
-    min_winter_temp = float(input('Enter minimum winter temperature(wT): '))
-    # The intervals in which depth changes
-    delta_depth = float(input('Enter change in depth(delta z): '))
-
-    return mean_annual_temp, max_summer_temp, min_winter_temp, delta_depth
+    return round(total_fci), fci_dataframe, depth_to_0
 
 
 def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day, thermal_diffusivity):
