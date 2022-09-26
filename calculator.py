@@ -42,13 +42,17 @@ def calculate(entries):
     if None in entries:
         return None
 
-    mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth, thermal_diffusivity, window_min, window_max = entries
+    mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth, thermal_diffusivity, window_max, window_min = entries
+
+    if window_min >= window_max:
+        return None
+
     # Main loop to get the data required
     full_data_list, data_list, depths, days = loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth, thermal_diffusivity)
 
     # Create dataframes out of the data
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
-        create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_min, window_max)
+        create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
 
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
@@ -83,7 +87,7 @@ def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day,
     return temp
 
 
-def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_min, window_max):
+def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min):
     # Creation of a 2D numpy array using the split function to split the entirety data into different rows based
     # on the maximum depth and each depth interval
     tz_array = np.array_split(data_list, (max_depth / delta_depth) + 1)
@@ -102,7 +106,7 @@ def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths,
     # Uses the optional flag 'readwrite' to change the array based on a if/else statement
     for i in np.nditer(ccm_array, op_flags=['readwrite']):
         # If the temperatures are between 0 and -15
-        if 0 >= i >= -15:
+        if int(window_max) >= i >= int(window_min):
             # Variable for the the next depth on the same day
             try:
                 # j = ccm_array[index + 365]

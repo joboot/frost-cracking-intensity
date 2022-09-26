@@ -31,13 +31,19 @@ def calculate_fci(*args):
     if None in entries:
         return None
 
-    total_fci, fci_dataframe = calculator.calculate(entries)
+    try:
+        total_fci, fci_dataframe = calculator.calculate(entries)
+        warning_label.config(text="")
+        total_fci = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
 
-    warning_label.config(text="")
-    total_fci = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
+        fci_label.config(text=total_fci)
+        output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
 
-    fci_label.config(text=total_fci)
-    output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
+    except TypeError as te:
+        print(te)
+        warning_label.config(text="Error: Frost cracking window invalid")
+
+
 
 
 def output_to_excel():
@@ -159,6 +165,7 @@ calculate_fci_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.075)
 warning_label = tk.Label(
     input_frame,
     text="",
+    font=("Times New Roman", 14),
     bg='#ffffff',
     fg='#ff0000'
 )
