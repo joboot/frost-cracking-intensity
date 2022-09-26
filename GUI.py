@@ -32,18 +32,23 @@ def calculate_fci(*args):
         return None
 
     try:
-        total_fci, fci_dataframe = calculator.calculate(entries)
+        total_fci, fci_dataframe, depth_to_0 = calculator.calculate(entries)
         warning_label.config(text="")
-        total_fci = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
 
+        total_fci = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
         fci_label.config(text=total_fci)
+
+        if depth_to_0 is None:
+            depth_to_0_label.config(text="Depth to 0 (cm): Increase max depth")
+        else:
+            depth_to_0 = "Depth to 0 (cm): " + str(depth_to_0)
+            depth_to_0_label.config(text=depth_to_0)
+
         output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
 
     except TypeError as te:
         print(te)
         warning_label.config(text="Error: Frost cracking window invalid")
-
-
 
 
 def output_to_excel():
@@ -178,7 +183,16 @@ fci_label = tk.Label(
     anchor='w',
     font=("Times New Roman", 14)
 )
-fci_label.place(rely=0.075, relwidth=0.45, relheight=0.125, anchor='w')
+fci_label.place(rely=0.075, relwidth=0.55, relheight=0.125, anchor='w')
+
+depth_to_0_label = tk.Label(
+    output_frame,
+    text="Depth to 0 (cm): ",
+    fg='#000000',
+    anchor='w',
+    font=("Times New Roman", 14)
+)
+depth_to_0_label.place(rely=0.25, relwidth=0.55, relheight=0.125, anchor='w')
 
 output_to_excel_button = tk.Button(output_frame,
                                    text="Output to Excel",
