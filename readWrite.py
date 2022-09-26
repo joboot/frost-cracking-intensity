@@ -18,15 +18,15 @@ def write_to_excel(dataframe, entries):
     book = xw.Book()
     sheet = book.sheets[0]
 
-    # data_ex_headers_range = sheet.range("A2").expand('table')
-    # for border_id in range(7, 13):
-    #     data_ex_headers_range.api.Borders(border_id).Weight = 2
-    #     data_ex_headers_range.api.Borders(border_id).Color = 0xFFFFFF
+    data_ex_headers_range = sheet.range("A2").expand('table')
+    for border_id in range(7, 13):
+        data_ex_headers_range.api.Borders(border_id).Weight = 2
+        data_ex_headers_range.api.Borders(border_id).Color = 0xFFFFFF
 
     sheet['A1'].value = "MAT (" + constant.degree_symbol + "C)"
     sheet['A2'].value = entries[0]
 
-    sheet['B1'].value = "Ta (" + constant.degree_symbol + "C)"
+    sheet['B1'].value = constant.ta + " (" + constant.degree_symbol + "C)"
     sheet['B2'].value = (entries[1]-entries[2])/2
 
     sheet['C1'].value = "Max Depth (cm)"
@@ -36,7 +36,7 @@ def write_to_excel(dataframe, entries):
     sheet['D2'].value = entries[4]
 
     sheet['A5'].value = "Depth (cm)"
-    sheet['B5'].value = "FCI"
+    sheet['B5'].value = "FCI (" + constant.fci_unit + ")"
     sheet['A6'].value = dataframe
 
     sheet.range('B6:B500').number_format = '0.00'
@@ -47,7 +47,7 @@ def write_to_excel(dataframe, entries):
 
     header_data_range.api.Font.Name = 'Times New Roman'
     header_data_range.api.Font.Size = 12
-    header_data_range.api.WrapText = True
+    header_data_range.api.WrapText = False
 
     fci_data_range = sheet.range("A5").expand('table')
     fci_data_range.row_height = 15
@@ -55,7 +55,10 @@ def write_to_excel(dataframe, entries):
 
     fci_data_range.api.Font.Name = 'Times New Roman'
     fci_data_range.api.Font.Size = 12
-    fci_data_range.api.WrapText = True
+    fci_data_range.api.WrapText = False
+
+    # fci_data_range.api.HorizontalAlignment = xw.constants.HAlign.xlHAlignCenter
+    #
     #
     # header_range = sheet.range("A1").expand('right')
     # header_range.color = (112, 173, 71)
@@ -73,7 +76,6 @@ def write_to_excel(dataframe, entries):
     #
     # # ta_dataframe.to_excel(writer, float_format='%.2f', startrow=4, startcol=0)
     # dataframe.to_excel(writer, startrow=4, startcol=0)
-    # writer.
     # writer.save()
 
     # =========================================================================
