@@ -123,7 +123,7 @@ delta_depth_entry = tk.Entry(input_frame, font=("Times New Roman", 14))
 delta_depth_entry.place(relx=0.6, rely=0.4, relwidth=0.4, relheight=0.075)
 
 thermal_diffusivity_label = tk.Label(input_frame,
-                                     text="Thermal Diffusivity of rock (" + constant.alpha_unit + "):",
+                                     text="Thermal Diffusivity of Rock (" + constant.alpha_unit + "):",
                                      anchor='w',
                                      font=("Times New Roman", 14)
                                      )
@@ -133,7 +133,7 @@ thermal_diffusivity_entry = tk.Entry(input_frame, font=("Times New Roman", 14))
 thermal_diffusivity_entry.place(relx=0.6, rely=0.5, relwidth=0.4, relheight=0.075)
 
 frost_cracking_window_label = tk.Label(input_frame,
-                                       text="Frost Cracking Window (" + constant.degree_symbol + "C) (max to min):",
+                                       text="Frost Cracking Window (" + constant.degree_symbol + "C) (maximum to minimum):",
                                        anchor='w',
                                        font=("Times New Roman", 14)
                                        )

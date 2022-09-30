@@ -35,6 +35,12 @@ def write_to_excel(dataframe, entries):
     sheet['D1'].value = "Depth interval (cm)"
     sheet['D2'].value = entries[4]
 
+    # sheet['E1'].value = "Thermal Diffusivity of rock (" + constant.alpha_unit + ")"
+    # sheet['E2'].value = entries[5]
+    #
+    # sheet['F1'].value = "Frost Cracking window (" + constant.degree_symbol + "C)"
+    # sheet['F2'].value = str(entries[6]) + ' - ' + str(entries[7])
+
     sheet['A5'].value = "Depth (cm)"
     sheet['B5'].value = "FCI (" + constant.fci_unit + ")"
     sheet['A6'].value = dataframe
@@ -43,7 +49,7 @@ def write_to_excel(dataframe, entries):
 
     header_data_range = sheet.range("A1").expand('table')
     header_data_range.row_height = 15
-    header_data_range.column_width = 15
+    header_data_range.column_width = 25
 
     header_data_range.api.Font.Name = 'Times New Roman'
     header_data_range.api.Font.Size = 12
