@@ -28,10 +28,19 @@ __status__ = "Development"
 def main():
     print('calculator.py main')
     # For testing purposes
-    mean_annual_temp = 0.1
-    max_summer_temp = 10.9
-    min_winter_temp = -10.9
-    max_depth = 2000
+    # mean_annual_temp = 0.1
+    # max_summer_temp = 10.9
+    # min_winter_temp = -10.9
+    # max_depth = 2000
+    # delta_depth = 10
+    # thermal_diffusivity = 1296
+    # window_max = 0
+    # window_min = -15
+
+    mean_annual_temp = -14
+    max_summer_temp = 38
+    min_winter_temp = -68
+    max_depth = 4000
     delta_depth = 10
     thermal_diffusivity = 1296
     window_max = 0
