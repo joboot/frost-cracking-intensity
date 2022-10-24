@@ -7,11 +7,13 @@ import pandas as pd
 
 fci_dataframe = pd.DataFrame()
 entries = []
+depth_to_0 = 0
 
 
 def calculate_fci(*args):
     global fci_dataframe
     global entries
+    global depth_to_0
     print("Button clicked")
     entries = [*args]
 
@@ -41,8 +43,8 @@ def calculate_fci(*args):
         if depth_to_0 is None:
             depth_to_0_label.config(text="Depth to 0 (cm): Increase max depth")
         else:
-            depth_to_0 = "Depth to 0 (cm): " + str(depth_to_0)
-            depth_to_0_label.config(text=depth_to_0)
+            depth_to_0_label_text = "Depth to 0 (cm): " + str(depth_to_0)
+            depth_to_0_label.config(text=depth_to_0_label_text)
 
         output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
 
@@ -54,9 +56,10 @@ def calculate_fci(*args):
 def output_to_excel():
     global fci_dataframe
     global entries
+    global depth_to_0
     print('output function')
 
-    readWrite.write_to_excel(fci_dataframe, entries)
+    readWrite.write_to_excel(fci_dataframe, entries, depth_to_0)
 
 
 root = tk.Tk()
