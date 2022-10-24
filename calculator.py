@@ -54,10 +54,12 @@ def main():
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
         create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
 
+    print(fci_dataframe[fci_dataframe == 0].first_valid_index())
+
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
-    print(fci_dataframe[fci_dataframe == 0].first_valid_index())
+
 
 
 def calculate(entries):
@@ -76,6 +78,8 @@ def calculate(entries):
     # Create dataframes out of the data
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
         create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
+
+    fci_dataframe = fci_dataframe.round(2)
 
     depth_to_0 = fci_dataframe[fci_dataframe == 0].first_valid_index()
 
