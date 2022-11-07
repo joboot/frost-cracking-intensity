@@ -5,15 +5,24 @@ import calculator
 import readWrite
 import pandas as pd
 
-fci_dataframe = pd.DataFrame()
 entries = []
+fci_dataframe = pd.DataFrame()
 depth_to_0 = 0
+total_fci = 0
+fci_dataframe_fci_10015 = pd.DataFrame()
+depth_to_0_fci_10015 = 0
+total_fci_fci_10015 = 0
 
 
 def calculate_fci(*args):
-    global fci_dataframe
     global entries
+    global fci_dataframe
     global depth_to_0
+    global total_fci
+    global fci_dataframe_fci_10015
+    global depth_to_0_fci_10015
+    global total_fci_fci_10015
+
     print("Button clicked")
     entries = [*args]
 
@@ -34,17 +43,26 @@ def calculate_fci(*args):
         return None
 
     try:
-        total_fci, fci_dataframe, depth_to_0 = calculator.calculate(entries)
+        total_fci, fci_dataframe, depth_to_0, total_fci_fci_10015, fci_dataframe_fci_10015, depth_to_0_fci_10015 = calculator.calculate(entries)
         warning_label.config(text="")
 
-        total_fci = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
-        fci_label.config(text=total_fci)
+        total_fci_label_text = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
+        fci_label.config(text=total_fci_label_text)
+
+        total_fci_label_fci_10015_text = "Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): " + str(total_fci_fci_10015)
+        fci_label_fci_10015.config(text=total_fci_label_fci_10015_text)
 
         if depth_to_0 is None:
-            depth_to_0_label.config(text="Depth to 0 (cm): Increase max depth")
+            depth_to_0_label.config(text="Depth to 0 FCI (cm): Increase max depth")
         else:
-            depth_to_0_label_text = "Depth to 0 (cm): " + str(depth_to_0)
+            depth_to_0_label_text = "Depth to 0 FCI (cm): " + str(depth_to_0)
             depth_to_0_label.config(text=depth_to_0_label_text)
+
+        if depth_to_0 is None:
+            depth_to_0_label.config(text="Depth to 0 FCI (cm): Increase max depth")
+        else:
+            depth_to_0_label_fci_10015_text = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): " + str(depth_to_0_fci_10015)
+            depth_to_0_label_fci_10015.config(text=depth_to_0_label_fci_10015_text)
 
         output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
 
@@ -57,9 +75,13 @@ def output_to_excel():
     global fci_dataframe
     global entries
     global depth_to_0
+    global total_fci
+    global fci_dataframe_fci_10015
+    global depth_to_0_fci_10015
+    global total_fci_fci_10015
     print('output function')
 
-    readWrite.write_to_excel(fci_dataframe, entries, depth_to_0)
+    readWrite.write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_fci_10015,depth_to_0_fci_10015, total_fci_fci_10015)
 
 
 root = tk.Tk()
@@ -190,12 +212,30 @@ fci_label.place(rely=0.075, relwidth=0.55, relheight=0.125, anchor='w')
 
 depth_to_0_label = tk.Label(
     output_frame,
-    text="Depth to 0 (cm): ",
+    text="Depth to 0 FCI (cm): ",
     fg='#000000',
     anchor='w',
     font=("Times New Roman", 14)
 )
 depth_to_0_label.place(rely=0.25, relwidth=0.55, relheight=0.125, anchor='w')
+
+fci_label_fci_10015 = tk.Label(
+    output_frame,
+    text="Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): ",
+    fg='#000000',
+    anchor='w',
+    font=("Times New Roman", 14)
+)
+fci_label_fci_10015.place(rely=0.425, relwidth=0.55, relheight=0.125, anchor='w')
+
+depth_to_0_label_fci_10015 = tk.Label(
+    output_frame,
+    text="Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): ",
+    fg='#000000',
+    anchor='w',
+    font=("Times New Roman", 14)
+)
+depth_to_0_label_fci_10015.place(rely=0.6, relwidth=0.55, relheight=0.125, anchor='w')
 
 output_to_excel_button = tk.Button(output_frame,
                                    text="Output to Excel",
