@@ -40,8 +40,8 @@ def main():
     mean_annual_temp = -14
     max_summer_temp = 38
     min_winter_temp = -68
-    max_depth = 4000
-    delta_depth = 10
+    max_depth = 5000
+    delta_depth = 45
     thermal_diffusivity = 1296
     window_max = 0
     window_min = -15
@@ -54,12 +54,8 @@ def main():
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
         create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
 
-    print(fci_dataframe[fci_dataframe == 0].first_valid_index())
-
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
-
-
 
 
 def calculate(entries):
@@ -75,18 +71,28 @@ def calculate(entries):
     # Main loop to get the data required
     full_data_list, data_list, depths, days = loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_depth, thermal_diffusivity)
 
+    full_data_list_fci_10015, data_list_fci_10015, depths_fci_10015, days_fci_10015 = loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, 10, thermal_diffusivity)
+
     # Create dataframes out of the data
     ta_dataframe, ccm_dataframe, fci_dataframe, total_fci = \
         create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min)
 
+    # Create dataframes out of the data
+    ta_dataframe_fci_10015, ccm_dataframe_fci_10015, fci_dataframe_fci_10015, total_fci_fci_10015 = \
+        create_dataframes(full_data_list_fci_10015, data_list_fci_10015, max_depth, 10, depths_fci_10015, days_fci_10015, 0, -15)
+
     fci_dataframe = fci_dataframe.round(2)
 
+    fci_dataframe_fci_10015 = fci_dataframe.round(2)
+
     depth_to_0 = fci_dataframe[fci_dataframe == 0].first_valid_index()
+
+    depth_to_0_fci_10015 = fci_dataframe_fci_10015[fci_dataframe_fci_10015 == 0].first_valid_index()
 
     # Displays dataframes and total FCI
     display_output(ta_dataframe, ccm_dataframe, fci_dataframe, total_fci)
 
-    return round(total_fci), fci_dataframe, depth_to_0
+    return round(total_fci), fci_dataframe, depth_to_0, round(total_fci_fci_10015), fci_dataframe_fci_10015, depth_to_0_fci_10015
 
 
 def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day, thermal_diffusivity):
@@ -94,7 +100,7 @@ def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day,
     year_period = 365
 
     # Ta = Half of the difference between max summer and winter min temps
-    ta = (max_summer_temp - min_winter_temp) / 2
+    ta = (max_summer_temp - min_winter_temp) / 4
 
     # frost cracking equation
     temp = mean_annual_temp + (ta * math.exp(-depth * (pi / (thermal_diffusivity * year_period)) ** 0.5)) * math.sin(
@@ -104,12 +110,12 @@ def calculations(mean_annual_temp, max_summer_temp, min_winter_temp, depth, day,
 
 
 def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths, days, window_max, window_min):
-    # Creation of a 2D numpy array using the split function to split the entirety data into different rows based
-    # on the maximum depth and each depth interval
-    tz_array = np.array_split(data_list, (max_depth / delta_depth) + 1)
+    split_data_list = []
+    for i in range(0, len(data_list), 365):
+        x = i
+        split_data_list.append(data_list[x:x + 365])
 
-    # Create dataframe for the T/z (Temperature over depth)
-    ta_dataframe = pd.DataFrame(tz_array, index=depths, columns=days)
+    ta_dataframe = pd.DataFrame(split_data_list, index=depths, columns=days)
 
     full_ccm_array = np.array(full_data_list)
     # Create a numpy array from the initial data list
@@ -125,12 +131,10 @@ def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths,
         if int(window_max) >= i >= int(window_min):
             # Variable for the the next depth on the same day
             try:
-                # j = ccm_array[index + 365]
                 if ccm_array[index] == full_ccm_array[index + 365]:
                     print("Array value is the same")
-                # print("ccm_array" + str(ccm_array[index + 365]))
-                # print("full_ccm_array" + str(full_ccm_array[index + 365]))
                 j = full_ccm_array[index + 365]
+
             except IndexError as ie:
                 print(ie)
 
@@ -190,8 +194,8 @@ def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_de
     for i in range(1, 366):
         days.append(i)
 
-    # Loop to get the date for all of depth intervals 2000 cm and under
-    while depth <= max_depth + 100:
+    # Loop to get the date for all of depth intervals max depth and under
+    while depth <= max_depth + delta_depth*5:
 
         # Loop to get the calculations in a year at this depth interval
         while day <= 365:
@@ -209,9 +213,8 @@ def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_de
         # Change the depth to the next depth based on the depth interval
         depth = depth + delta_depth
 
-    data_list = full_data_list[: - int(delta_depth*365)]
-    print(len(full_data_list))
-    print(len(data_list))
+    data_list = full_data_list[: - int(5*365)]
+
     return full_data_list, data_list, depths, days
 
 
