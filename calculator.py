@@ -83,7 +83,7 @@ def calculate(entries):
 
     fci_dataframe = fci_dataframe.round(2)
 
-    fci_dataframe_fci_10015 = fci_dataframe.round(2)
+    fci_dataframe_fci_10015 = fci_dataframe_fci_10015.round(2)
 
     depth_to_0 = fci_dataframe[fci_dataframe == 0].first_valid_index()
 
