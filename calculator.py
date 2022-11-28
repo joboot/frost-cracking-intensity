@@ -41,7 +41,7 @@ def main():
     max_summer_temp = 38
     min_winter_temp = -68
     max_depth = 5000
-    delta_depth = 45
+    delta_depth = 10.2
     thermal_diffusivity = 1296
     window_max = 0
     window_min = -15
@@ -185,7 +185,7 @@ def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_de
     # List to hold the depths for the indices
     depths = []
     # Creates a range between 0-max_depth (Maximum depth) with intervals of delta_depth (Change in depth)
-    for i in range(0, int(max_depth + 1.0), int(delta_depth)):
+    for i in np.arange(0, float(max_depth + 1.0), float(delta_depth)):
         depths.append(i)
 
     # List to hold the numbered days of the year for the columns

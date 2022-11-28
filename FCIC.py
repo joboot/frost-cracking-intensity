@@ -23,7 +23,13 @@ def calculate_fci(*args):
     global depth_to_0_fci_10015
     global total_fci_fci_10015
 
+
     print("Button clicked")
+    depth_to_0_label.config(text="Depth to 0 FCI (cm): ")
+    fci_label.config(text="Total FCI (" + constant.fci_unit + "): ")
+    depth_to_0_label_fci_10015.config(text= "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): ")
+    fci_label_fci_10015.config(text="Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): ")
+
     entries = [*args]
 
     for i in range(len(entries)):
