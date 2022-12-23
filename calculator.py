@@ -61,10 +61,10 @@ def main():
     # graph.plot_data(fci_dataframe)
 
     # testing depth intervals with dataframe errors
-    # test_depth_interval()
+    test_depth_interval()
 
     # testing graph function
-    test_graph()
+    # test_graph()
 
 
 def calculate(entries):
@@ -124,8 +124,11 @@ def create_dataframes(full_data_list, data_list, max_depth, delta_depth, depths,
         x = i
         split_data_list.append(data_list[x:x + 365])
 
-    # print(len(split_data_list))
-    # print(len(depths))
+    # print("length of data list", len(data_list))
+    # print("length of split data list", len(split_data_list))
+    # print("length of depths", len(depths))
+    # print("length of split data list last row", len(split_data_list[-1]))
+
     ta_dataframe = pd.DataFrame(split_data_list, index=depths, columns=days)
 
     full_ccm_array = np.array(full_data_list)
@@ -196,9 +199,12 @@ def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_de
     # List to hold the depths for the indices
     depths = []
     # Creates a range between 0-max_depth (Maximum depth) with intervals of delta_depth (Change in depth)
-    for i in np.arange(0, float(max_depth)+ 1.0, float(delta_depth)):
+    for i in np.arange(0, float(max_depth) + 1.0, float(delta_depth)):
         depths.append(i)
-
+    # print(depths)
+    # print(len(depths))
+    # print()
+    # print()
     # List to hold the numbered days of the year for the columns
     days = []
     # Creates a range between 1-365 for each day of the year
@@ -230,15 +236,15 @@ def loop(mean_annual_temp, max_summer_temp, min_winter_temp, max_depth, delta_de
 
 
 def test_depth_interval():
-    mean_annual_temp = -14
-    max_summer_temp = 38
-    min_winter_temp = -68
-    max_depth = 5000
+    mean_annual_temp = .1
+    max_summer_temp = 10
+    min_winter_temp = -10
+    max_depth = 2000
     thermal_diffusivity = 1296
     window_max = 0
     window_min = -15
 
-    delta_depth = 0.1
+    delta_depth = 1
 
     error_numbers = []
     num_errors = 0
@@ -257,7 +263,7 @@ def test_depth_interval():
             error_numbers.append(delta_depth)
             num_errors = num_errors + 1
 
-        delta_depth = delta_depth + 0.1
+        delta_depth = delta_depth + 1
 
     print("Number of intervals tested:", num_intervals_tested)
     print("Number of errors:", num_errors)
