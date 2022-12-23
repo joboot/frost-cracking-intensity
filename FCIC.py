@@ -1,9 +1,11 @@
 import sys
 import tkinter as tk
+import pandas as pd
+
 import constant
 import calculator
 import readWrite
-import pandas as pd
+import graph
 
 entries = []
 fci_dataframe = pd.DataFrame()
@@ -22,7 +24,6 @@ def calculate_fci(*args):
     global fci_dataframe_fci_10015
     global depth_to_0_fci_10015
     global total_fci_fci_10015
-
 
     print("Button clicked")
     depth_to_0_label.config(text="Depth to 0 FCI (cm): ")
@@ -70,7 +71,8 @@ def calculate_fci(*args):
             depth_to_0_label_fci_10015_text = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): " + str(depth_to_0_fci_10015)
             depth_to_0_label_fci_10015.config(text=depth_to_0_label_fci_10015_text)
 
-        output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.48, relheight=0.125)
+        output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.24, relheight=0.125)
+        show_graph_button.place(relx=0.5, rely=0.85, relwidth=0.24, relheight=0.125)
 
     except TypeError as te:
         print(te)
@@ -88,6 +90,14 @@ def output_to_excel():
     print('output function')
 
     readWrite.write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_fci_10015,depth_to_0_fci_10015, total_fci_fci_10015)
+
+
+def show_graph():
+    global fci_dataframe
+
+    print("show graph button clicked")
+    fci_graph = graph.create_graph(fci_dataframe)
+    graph.show_graph(fci_graph)
 
 
 root = tk.Tk()
@@ -247,6 +257,12 @@ output_to_excel_button = tk.Button(output_frame,
                                    text="Output to Excel",
                                    font=("Times New Roman", 14),
                                    command=lambda: output_to_excel()
+                                   )
+
+show_graph_button = tk.Button(output_frame,
+                                   text="Show Graph",
+                                   font=("Times New Roman", 14),
+                                   command=lambda: show_graph()
                                    )
 
 root.mainloop()
