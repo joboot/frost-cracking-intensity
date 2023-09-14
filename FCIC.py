@@ -1,5 +1,7 @@
 import sys
 import tkinter as tk
+from typing import Any
+
 import pandas as pd
 
 import constant
@@ -7,7 +9,7 @@ import calculator
 import readWrite
 import graph
 
-entries = []
+entries: list[Any] = []
 fci_dataframe = pd.DataFrame()
 depth_to_0 = 0
 total_fci = 0
@@ -17,6 +19,13 @@ total_fci_fci_10015 = 0
 
 
 def calculate_fci(*args):
+    """
+    This calls upon the calculator.calculate_fci method with the entries the user has submitted. Will either show the
+    calculated FCI if the entries are correct along with the "Output to Excel" and the "Show graph" buttons, otherwise
+    it will populate the error message and display that. This runs when the "Calculate FCI" button is pressed.
+    :param args: All of the entries, regardless of object type
+    :return None: If there are any errors
+    """
     global entries
     global fci_dataframe
     global depth_to_0
@@ -25,10 +34,9 @@ def calculate_fci(*args):
     global depth_to_0_fci_10015
     global total_fci_fci_10015
 
-    print("Button clicked")
     depth_to_0_label.config(text="Depth to 0 FCI (cm): ")
     fci_label.config(text="Total FCI (" + constant.fci_unit + "): ")
-    depth_to_0_label_fci_10015.config(text= "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): ")
+    depth_to_0_label_fci_10015.config(text="Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): ")
     fci_label_fci_10015.config(text="Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): ")
 
     entries = [*args]
@@ -41,22 +49,35 @@ def calculate_fci(*args):
 
             entries[i] = float(entries[i])
 
-        except ValueError as ve:
+        except ValueError:
             warning_label.config(text="Error: Entry is not a number")
             entries[i] = None
 
-    # print(entries)
+    if entries[3] <= 0:
+        warning_label.config(text="Error: Maximum depth must be greater than 0")
+        entries[3] = None
+
+    if not entries[4].is_integer():
+        warning_label.config(text="Error: Depth interval must be an integer")
+        entries[4] = None
+    elif entries[4] <= 0:
+        warning_label.config(text="Error: Depth interval must be greater than 0")
+        entries[4] = None
+
     if None in entries:
         return None
 
     try:
-        total_fci, fci_dataframe, depth_to_0, total_fci_fci_10015, fci_dataframe_fci_10015, depth_to_0_fci_10015 = calculator.calculate(entries)
+        total_fci, fci_dataframe, depth_to_0, total_fci_fci_10015, fci_dataframe_fci_10015, depth_to_0_fci_10015 = \
+            calculator.calculate_fci(entries)
+
         warning_label.config(text="")
 
         total_fci_label_text = "Total FCI (" + constant.fci_unit + "): " + str(total_fci)
         fci_label.config(text=total_fci_label_text)
 
-        total_fci_label_fci_10015_text = "Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): " + str(total_fci_fci_10015)
+        total_fci_label_fci_10015_text = "Total FCI" + constant.fci_10015_subscript + " (" + constant.fci_unit + "): " \
+                                         + str(total_fci_fci_10015)
         fci_label_fci_10015.config(text=total_fci_label_fci_10015_text)
 
         if depth_to_0 is None:
@@ -68,18 +89,22 @@ def calculate_fci(*args):
         if depth_to_0 is None:
             depth_to_0_label.config(text="Depth to 0 FCI (cm): Increase max depth")
         else:
-            depth_to_0_label_fci_10015_text = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): " + str(depth_to_0_fci_10015)
+            depth_to_0_label_fci_10015_text = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm): " \
+                                              + str(depth_to_0_fci_10015)
             depth_to_0_label_fci_10015.config(text=depth_to_0_label_fci_10015_text)
 
         output_to_excel_button.place(relx=0.25, rely=0.85, relwidth=0.24, relheight=0.125)
         show_graph_button.place(relx=0.5, rely=0.85, relwidth=0.24, relheight=0.125)
 
-    except TypeError as te:
-        print(te)
+    except TypeError:
         warning_label.config(text="Error: Frost cracking window invalid")
 
 
 def output_to_excel():
+    """
+    Calls upon the readWrite.write_to_excel method. This runs when the "Output to Excel" button is pressed.
+    :return None:
+    """
     global fci_dataframe
     global entries
     global depth_to_0
@@ -87,17 +112,20 @@ def output_to_excel():
     global fci_dataframe_fci_10015
     global depth_to_0_fci_10015
     global total_fci_fci_10015
-    print('output function')
 
-    readWrite.write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_fci_10015,depth_to_0_fci_10015, total_fci_fci_10015)
+    readWrite.write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_fci_10015,
+                             depth_to_0_fci_10015, total_fci_fci_10015)
 
 
 def show_graph():
+    """
+    Calls upon the graph.create_graph and graph.show_graph methods. This runs when the "Show Graph" button is pressed.
+    :return None:
+    """
     global fci_dataframe
 
-    print("show graph button clicked")
-    fci_graph = graph.create_graph(fci_dataframe)
-    graph.show_graph(fci_graph)
+    graph.create_graph(fci_dataframe)
+    graph.show_graph()
 
 
 root = tk.Tk()
@@ -174,7 +202,8 @@ thermal_diffusivity_entry = tk.Entry(input_frame, font=("Times New Roman", 14))
 thermal_diffusivity_entry.place(relx=0.6, rely=0.5, relwidth=0.4, relheight=0.075)
 
 frost_cracking_window_label = tk.Label(input_frame,
-                                       text="Frost Cracking Window (" + constant.degree_symbol + "C) (maximum to minimum):",
+                                       text="Frost Cracking Window (" + constant.degree_symbol
+                                            + "C) (maximum to minimum):",
                                        anchor='w',
                                        font=("Times New Roman", 14)
                                        )
@@ -193,6 +222,7 @@ window_max_entry.place(relx=0.6, rely=0.6, relwidth=0.1, relheight=0.075)
 window_min_entry = tk.Entry(input_frame, font=("Times New Roman", 14))
 window_min_entry.place(relx=0.75, rely=0.6, relwidth=0.1, relheight=0.075)
 
+# Creation of the "Calculate FCI" button. Utilizes lambda function to get all of the entries currently in the inputs.
 calculate_fci_button = tk.Button(input_frame,
                                  text="Calculate FCI",
                                  font=("Times New Roman", 14),
@@ -253,17 +283,19 @@ depth_to_0_label_fci_10015 = tk.Label(
 )
 depth_to_0_label_fci_10015.place(rely=0.6, relwidth=0.55, relheight=0.125, anchor='w')
 
+# Creation of the "Output to Excel" button
 output_to_excel_button = tk.Button(output_frame,
                                    text="Output to Excel",
                                    font=("Times New Roman", 14),
                                    command=lambda: output_to_excel()
                                    )
 
+# Creation of the "Show Graph" button
 show_graph_button = tk.Button(output_frame,
-                                   text="Show Graph",
-                                   font=("Times New Roman", 14),
-                                   command=lambda: show_graph()
-                                   )
+                              text="Show Graph",
+                              font=("Times New Roman", 14),
+                              command=lambda: show_graph()
+                              )
 
 root.mainloop()
 

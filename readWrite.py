@@ -2,33 +2,35 @@ import xlwings as xw
 from xlwings import constants
 
 import constant
-import graph
-
-
-def main():
-    print("readwrite main")
 
 
 def write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_fci_10015, depth_to_0_fci_10015,
                    total_fci_fci_10015):
-    print("writeToExcel")
+    """
+    Creation of Excel file for storing and formatting of FCIC output data.
+    :param fci_dataframe:
+    :param entries:
+    :param depth_to_0:
+    :param total_fci:
+    :param fci_dataframe_fci_10015:
+    :param depth_to_0_fci_10015:
+    :param total_fci_fci_10015:
+    :return None:
+    """
     mat = entries[0]
-    ta = (entries[1] - entries[2]) / 4
+    max_summer_temp = entries[1]
+    min_winter_temp = entries[2]
+    ta = (max_summer_temp - min_winter_temp) / 4
     max_depth = entries[3]
     depth_interval = entries[4]
     thermal_diffusivity = entries[5]
     frost_cracking_window_max = entries[6]
     frost_cracking_window_min = entries[7]
 
-    fci_graph = graph.create_graph(fci_dataframe)
-
     book = xw.Book()
-    book.sheets.add()
     sheet1 = book.sheets[0]
-    sheet2 = book.sheets[1]
 
     sheet1.name = "FCI Data"
-    sheet2.name = "Graph"
 
     data_ex_headers_range = sheet1.range("A2").expand('table')
     for border_id in range(7, 13):
@@ -44,26 +46,32 @@ def write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_
     sheet1['C1'].value = "MAT (" + constant.degree_symbol + "C)"
     sheet1['C2'].value = mat
 
-    sheet1['D1'].value = constant.ta + " (" + constant.degree_symbol + "C)"
-    sheet1['D2'].value = ta
+    sheet1['D1'].value = "Max Summer Temp (" + constant.degree_symbol + "C)"
+    sheet1['D2'].value = max_summer_temp
 
-    sheet1['E1'].value = "Max Depth (cm)"
-    sheet1['E2'].value = max_depth
+    sheet1['E1'].value = "Min Winter Temp (" + constant.degree_symbol + "C)"
+    sheet1['E2'].value = min_winter_temp
 
-    sheet1['F1'].value = "Depth interval (cm)"
-    sheet1['F2'].value = depth_interval
+    sheet1['F1'].value = constant.ta + " (" + constant.degree_symbol + "C)"
+    sheet1['F2'].value = ta
 
-    sheet1['G1'].value = "Thermal Diffusivity of Rock (" + constant.alpha_unit + ")"
-    sheet1['G2'].value = thermal_diffusivity
+    sheet1['G1'].value = "Max Depth (cm)"
+    sheet1['G2'].value = max_depth
 
-    sheet1['H1'].value = "Frost Cracking window (" + constant.degree_symbol + "C)"
-    sheet1['H2'].value = str(frost_cracking_window_max) + ' - ' + str(frost_cracking_window_min)
+    sheet1['H1'].value = "Depth interval (cm)"
+    sheet1['H2'].value = depth_interval
 
-    sheet1['I1'].value = "Depth to 0 FCI (cm)"
-    sheet1['I2'].value = depth_to_0
+    sheet1['I1'].value = "Thermal Diffusivity of Rock (" + constant.alpha_unit + ")"
+    sheet1['I2'].value = thermal_diffusivity
 
-    sheet1['J1'].value = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm)"
-    sheet1['J2'].value = depth_to_0_fci_10015
+    sheet1['J1'].value = "Frost Cracking window (" + constant.degree_symbol + "C)"
+    sheet1['J2'].value = str(frost_cracking_window_max) + ' - ' + str(frost_cracking_window_min)
+
+    sheet1['K1'].value = "Depth to 0 FCI (cm)"
+    sheet1['K2'].value = depth_to_0
+
+    sheet1['L1'].value = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm)"
+    sheet1['L2'].value = depth_to_0_fci_10015
 
     sheet1['A5'].value = "Depth (cm)"
     sheet1['B5'].value = "FCI (" + constant.fci_unit + ")"
@@ -160,17 +168,3 @@ def write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_
     fci_10015_data_range.api.Font.Size = 10
     fci_10015_data_range.api.WrapText = False
     fci_10015_data_range.api.HorizontalAlignment = constants.HAlign.xlHAlignCenter
-
-    sheet2.pictures.add(
-        fci_graph,
-        name="Matplotlib",
-        update=True,
-        left=sheet2.range("B4").left,
-        top=sheet2.range("B4").top,
-        height=450,
-        width=450
-    )
-
-
-if __name__ == "__main__":
-    main()

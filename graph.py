@@ -1,9 +1,6 @@
 import seaborn as sns
 from matplotlib import pyplot as plt
-import pandas as pd
 import numpy as np
-import math
-
 import constant
 
 
@@ -12,12 +9,15 @@ def main():
 
 
 def create_graph(dataframe):
-    fig = plt.figure()
+    """
 
+    :param dataframe:
+    :return None:
+    """
     max_x_value = np.max(dataframe.values) + .5
     max_y_value = dataframe.index[-1]
-    # sns.set(font="Verdana")
-    graph = sns.lineplot(data=dataframe, x=dataframe.values, y=dataframe.index, color='black')
+
+    graph = sns.scatterplot(data=dataframe, x=dataframe.values, y=dataframe.index, color='black', marker='o')
 
     graph.axis([0, max_x_value, 0, max_y_value])
     x_axis_label = "Frost Cracking Intensity (" + constant.fci_unit + ") 0 to -15 " + constant.degree_symbol + "C"
@@ -30,13 +30,15 @@ def create_graph(dataframe):
     ax.xaxis.set_ticks(np.arange(0, max_x_value, 1))
     ax.xaxis.tick_top()  # and move the X-Axis
 
-    ax.yaxis.set_ticks(np.arange(0, max_y_value + 1, 100))  # set y-ticks
+    ax.yaxis.set_ticks(np.arange(0, max_y_value + 1, max_y_value/20))  # set y-ticks
     ax.yaxis.tick_left()  # remove right y-Ticks
 
-    return fig
 
-
-def show_graph(graph):
+def show_graph():
+    """
+    Displays currently created plot
+    :return None:
+    """
     plt.show()
 
 

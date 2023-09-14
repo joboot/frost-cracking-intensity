@@ -9,6 +9,10 @@ fci_10015_subscript = '\u2081\u2080\u002C\u2080\u208B\u2081\u2085'
 
 
 def main():
+    """
+    Test displaying all constants in console
+    :return None:
+    """
     print(alpha_unit)
     print(ta)
     print(fci_unit)
@@ -17,4 +21,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
