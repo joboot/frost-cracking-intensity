@@ -52,26 +52,29 @@ def write_to_excel(fci_dataframe, entries, depth_to_0, total_fci, fci_dataframe_
     sheet1['E1'].value = "Min Winter Temp (" + constant.degree_symbol + "C)"
     sheet1['E2'].value = min_winter_temp
 
-    sheet1['F1'].value = constant.ta + " (" + constant.degree_symbol + "C)"
-    sheet1['F2'].value = ta
+    sheet1['F1'].value = "Annual Temperature Range (C" + constant.degree_symbol + ")"
+    sheet1['F2'].value = (max_summer_temp - min_winter_temp)
 
-    sheet1['G1'].value = "Max Depth (cm)"
-    sheet1['G2'].value = max_depth
+    sheet1['G1'].value = constant.ta + " (" + constant.degree_symbol + "C)"
+    sheet1['G2'].value = ta
 
-    sheet1['H1'].value = "Depth interval (cm)"
-    sheet1['H2'].value = depth_interval
+    sheet1['H1'].value = "Max Depth (cm)"
+    sheet1['H2'].value = max_depth
 
-    sheet1['I1'].value = "Thermal Diffusivity of Rock (" + constant.alpha_unit + ")"
-    sheet1['I2'].value = thermal_diffusivity
+    sheet1['I1'].value = "Depth interval (cm)"
+    sheet1['I2'].value = depth_interval
 
-    sheet1['J1'].value = "Frost Cracking window (" + constant.degree_symbol + "C)"
-    sheet1['J2'].value = str(frost_cracking_window_max) + ' - ' + str(frost_cracking_window_min)
+    sheet1['J1'].value = "Thermal Diffusivity of Rock (" + constant.alpha_unit + ")"
+    sheet1['J2'].value = thermal_diffusivity
 
-    sheet1['K1'].value = "Depth to 0 FCI (cm)"
-    sheet1['K2'].value = depth_to_0
+    sheet1['K1'].value = "Frost Cracking window (" + constant.degree_symbol + "C)"
+    sheet1['K2'].value = str(frost_cracking_window_max) + ' - ' + str(frost_cracking_window_min)
 
-    sheet1['L1'].value = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm)"
-    sheet1['L2'].value = depth_to_0_fci_10015
+    sheet1['L1'].value = "Depth to 0 FCI (cm)"
+    sheet1['L2'].value = depth_to_0
+
+    sheet1['M1'].value = "Depth to 0 FCI" + constant.fci_10015_subscript + " (cm)"
+    sheet1['M2'].value = depth_to_0_fci_10015
 
     sheet1['A5'].value = "Depth (cm)"
     sheet1['B5'].value = "FCI (" + constant.fci_unit + ")"
